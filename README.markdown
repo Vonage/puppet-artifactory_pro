@@ -130,7 +130,7 @@ This is required if using a new data source.
 
 ##### `db_type`
 
-Only required for database configuration. The type of database to configure for. Valid values are 'mssql', 'mysql', 'oracle', 'postgresql'.
+Only required for database configuration. The type of database to configure for. Valid values are 'mariadb', 'mssql', 'mysql', 'oracle', 'postgresql'.
 
 ##### `db_url`
 
