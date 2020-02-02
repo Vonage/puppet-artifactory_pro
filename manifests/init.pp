@@ -13,42 +13,56 @@
 
 class artifactory_pro(
   String $license_key,
-  Boolean $manage_java                                                               = true,
-  Boolean $manage_repo                                                               = true,
-  String $yum_name                                                                   = 'bintray-jfrog-artifactory-pro-rpms',
-  String $yum_baseurl                                                                = 'http://jfrog.bintray.com/artifactory-pro-rpms',
-  String $package_name                                                               = 'jfrog-artifactory-pro',
-  Optional[String] $jdbc_driver_url                                                  = undef,
-  Optional[Enum['mariadb', 'mssql', 'mysql', 'oracle', 'postgresql']] $db_type       = undef,
-  Optional[String] $db_url                                                           = undef,
-  Optional[String] $db_username                                                      = undef,
-  Optional[String] $db_password                                                      = undef,
-  Optional[Enum['filesystem', 'fullDb','cachedFS']] $binary_provider_type            = undef,
-  Optional[Integer] $pool_max_active                                                 = undef,
-  Optional[Integer] $pool_max_idle                                                   = undef,
-  Optional[Integer] $binary_provider_cache_maxsize                                   = undef,
-  Optional[String] $binary_provider_filesystem_dir                                   = undef,
-  Optional[String] $binary_provider_cache_dir                                        = undef,
-  Hash $plugin_urls                                                                  = {},
+  Boolean $manage_java                                                                     = true,
+  Boolean $manage_repo                                                                     = true,
+  Boolean $use_temp_db_secrets                                                             = true,
+  String $yum_name                                                                         = 'bintray-jfrog-artifactory-pro-rpms',
+  String $yum_baseurl                                                                      = 'http://jfrog.bintray.com/artifactory-pro-rpms',
+  String $package_name                                                                     = 'jfrog-artifactory-pro',
+  String $package_version                                                                  = 'present',
+  String $artifactory_home                                                                 = '/var/opt/jfrog/artifactory',
+  Optional[String] $root_password                                                          = 'password',
+  Optional[String] $jdbc_driver_url                                                        = undef,
+  Optional[Enum['derby', 'mssql', 'mysql', 'oracle', 'postgresql']] $db_type               = undef,
+  Optional[String] $db_url                                                                 = undef,
+  Optional[String] $db_username                                                            = undef,
+  Optional[String] $db_password                                                            = undef,
+  Optional[Boolean] $db_automate                                                           = false,
+  Optional[Enum['filesystem', 'fullDb', 'cachedFS', 'fullDbDirect']] $binary_provider_type = undef,
+  Optional[Integer] $pool_max_active                                                       = undef,
+  Optional[Integer] $pool_max_idle                                                         = undef,
+  Optional[Integer] $binary_provider_cache_maxsize                                         = undef,
+  Optional[String] $binary_provider_base_data_dir                                          = undef,
+  Optional[String] $binary_provider_filesystem_dir                                         = undef,
+  Optional[String] $binary_provider_cache_dir                                              = undef,
+  Optional[String] $master_key                                                             = undef,
+  Hash $plugin_urls    
 ) {
 
   class{'::artifactory':
     manage_java                    => $manage_java,
     manage_repo                    => $manage_repo,
+    use_temp_db_secrets            => $use_temp_db_secrets,
     yum_name                       => $yum_name,
     yum_baseurl                    => $yum_baseurl,
     package_name                   => $package_name,
+    package_version                => $package_version,
+    artifactory_home               => $artifactory_home,
+    root_password                  => $root_password,
     db_type                        => $db_type,
     db_url                         => $db_url,
     db_username                    => $db_username,
     db_password                    => $db_password,
+    db_automate                    => $db_automate,
     binary_provider_type           => $binary_provider_type,
     pool_max_active                => $pool_max_active,
     pool_max_idle                  => $pool_max_idle,
     binary_provider_cache_maxsize  => $binary_provider_cache_maxsize,
+    binary_provider_base_data_dir  => $binary_provider_base_data_dir,
     binary_provider_filesystem_dir => $binary_provider_filesystem_dir,
     binary_provider_cache_dir      => $binary_provider_cache_dir,
     jdbc_driver_url                => $jdbc_driver_url,
+    master_key                     => $master_key,
   }
   -> class{'::artifactory_pro::config': }
   -> class{'::artifactory_pro::post_config': }
@@ -56,8 +70,8 @@ class artifactory_pro(
   # Ensure base Artifactory is configured before pro Artifactory
   Class['::artifactory::config']
   -> Class['::artifactory_pro::config']
-  ~> Class['::artifactory::service']
+  -> Class['::artifactory::service']
 
   Class['::artifactory_pro::post_config']
-  ~> Class['::artifactory::service']
+  -> Class['::artifactory::service']
 }
