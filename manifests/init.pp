@@ -36,7 +36,7 @@ class artifactory_pro(
   Optional[String] $binary_provider_filesystem_dir                                         = undef,
   Optional[String] $binary_provider_cache_dir                                              = undef,
   Optional[String] $master_key                                                             = undef,
-  Hash $plugin_urls                                                                        = {},
+  Hash $plugin_urls    
 ) {
 
   class{'::artifactory':
