@@ -13,7 +13,6 @@
 
 class artifactory_pro(
   String $license_key,
-  Boolean $manage_java                                                                     = true,
   Boolean $manage_repo                                                                     = true,
   Boolean $use_temp_db_secrets                                                             = true,
   String $yum_name                                                                         = 'bintray-jfrog-artifactory-pro-rpms',
@@ -40,7 +39,6 @@ class artifactory_pro(
 ) {
 
   class{'::artifactory':
-    manage_java                    => $manage_java,
     manage_repo                    => $manage_repo,
     use_temp_db_secrets            => $use_temp_db_secrets,
     yum_name                       => $yum_name,
