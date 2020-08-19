@@ -15,7 +15,7 @@ class artifactory_pro::config {
   }
 
   # Add the license file
-  file { "${::artifactory::artifactory_home}/etc/artifactory.lic":
+  file { "${::artifactory::artifactory_home}/etc/artifactory/artifactory.lic":
     ensure  => file,
     content => $::artifactory_pro::license_key,
     mode    => '0664',
